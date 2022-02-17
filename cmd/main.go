@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-var skuId = flag.String("sku", "100012043978", "茅台商品ID")
-var num = flag.Int("num", 2, "茅台商品ID")
+var skuId = flag.String("sku", "100018182443", "商品ID")
+var num = flag.Int("num", 2, "商品数量")
 var works = flag.Int("works", 7, "并发数")
 var start = flag.String("time", "09:59:59", "开始时间---不带日期")
 var brwoserPath = flag.String("execPath", "", "浏览器执行路径，路径不能有空格")

@@ -139,7 +139,7 @@ func (jsk *jdSecKill) SyncJdTime() {
 	r := gjson.ParseBytes(b)
 	jdTimeUnix := r.Get("serverTime").Int()
 	jsk.DiffTime = global.UnixMilli() - jdTimeUnix
-	logs.PrintlnInfo("服务器与本地时间差为: ", jsk.DiffTime, "ms")
+	logs.PrintlnInfo("服务器与本地时间差为: ", jsk.DiffTime,global.UnixMilli(),jdTimeUnix, "ms")
 }
 
 func (jsk *jdSecKill) PostReq(reqUrl string, params url.Values, referer string, ctx context.Context, isDisableRedirects bool) (gjson.Result, error) {
@@ -250,6 +250,7 @@ func (jsk *jdSecKill) Run() error {
 		jsk.GetEidAndFp(),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			u := "https://item.jd.com/" + jsk.SkuId + ".html"
+			logs.PrintlnInfo("这里输出链接：",u )
 			_ = chromedp.Navigate(u).Do(ctx)
 			for i := 0; i < jsk.Works; i++ {
 				go func() {
@@ -328,7 +329,7 @@ func (jsk *jdSecKill) GetEidAndFp() chromedp.ActionFunc {
 		_, _, _, _ = page.Navigate("https://item.jd.com/" + n.AttributeValue("data-sku") + ".html").Do(ctx)
 
 		logs.PrintlnInfo("等待商品详情页更新完成....")
-		_ = chromedp.WaitVisible("#InitCartUrl").Do(ctx)
+		_ = chromedp.WaitVisible("#cart-button showArrow").Do(ctx)
 		_ = chromedp.Sleep(1 * time.Second).Do(ctx)
 		_ = chromedp.Click("#InitCartUrl").Do(ctx)
 		_ = chromedp.WaitVisible("#GotoShoppingCart").Do(ctx)
